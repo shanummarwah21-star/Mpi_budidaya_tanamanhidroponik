@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Hidroponik Asik - Kelas 7 SMP</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        leaf: {
+                            DEFAULT: '#10B981',
+                            light: '#34D399',
+                            dark: '#047857',
+                            pale: '#F0FDF4'
+                        },
+                        skyblue: {
+                            DEFAULT: '#0EA5E9',
+                            light: '#38BDF8',
+                            pale: '#E0F2FE'
+                        },
+                        sunshine: {
+                            DEFAULT: '#FBBF24',
+                            light: '#FEF3C7',
+                            dark: '#D97706'
+                        },
+                        coral: {
+                            DEFAULT: '#FF6B6B',
+                            light: '#FFE3E3'
+                        },
+                        purplegrass: {
+                            DEFAULT: '#8B5CF6',
+                            pale: '#F5F3FF'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom animations & smooth transitions */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float { animation: floatSlow 3s ease-in-out infinite; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #fef08a33; }
+        ::-webkit-scrollbar-thumb { background: #34d399; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #059669; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-emerald-50 via-sky-50 to-amber-50 text-slate-700 font-sans min-h-screen flex flex-col selection:bg-sunshine selection:text-slate-900 text-base sm:text-lg">
+
+    <!-- CUSTOM NOTIFICATION MODAL (REPLACING ALERT) -->
+    <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full mx-4 shadow-2xl border-4 border-emerald-300 text-center space-y-4 animate-fadeIn">
+            <div id="modal-icon" class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+                <i data-lucide="info" class="w-8 h-8"></i>
+            </div>
+            <h3 id="modal-title" class="text-xl font-bold text-slate-800">Informasi</h3>
+            <p id="modal-message" class="text-slate-600 text-sm sm:text-base leading-relaxed">Pesan notifikasi...</p>
+            <button onclick="closeModal()" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-2xl shadow-md transition-all">
+                Mengerti 👍
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER & NAVBAR -->
+    <header class="bg-white/95 backdrop-blur-md sticky top-0 z-40 shadow-md border-b-4 border-emerald-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo & Brand -->
+                <div class="flex items-center space-x-3 cursor-pointer group" onclick="switchTab('home')">
+                    <div class="w-12 h-12 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-2xl flex items-center justify-center shadow-lg text-white group-hover:scale-105 transition-transform">
+                        <i data-lucide="sprout" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-700 bg-clip-text text-transparent tracking-tight block">HidroponikAsik</span>
+                        <span class="text-xs font-bold text-sky-700 bg-sky-200 px-2.5 py-0.5 rounded-full">Prakarya Kelas 7 (Fase D)</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Menu -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-2">
+                    <button onclick="switchTab('home')" class="nav-btn px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 text-emerald-700 bg-emerald-100 flex items-center gap-2 shadow-sm" data-tab="home">
+                        <i data-lucide="home" class="w-4 h-4"></i> Home
+                    </button>
+                    <button onclick="switchTab('tujuan')" class="nav-btn px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 text-slate-600 hover:bg-emerald-100 hover:text-emerald-800 flex items-center gap-2" data-tab="tujuan">
+                        <i data-lucide="target" class="w-4 h-4"></i> Tujuan
+                    </button>
+                    <button onclick="switchTab('materi')" class="nav-btn px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 text-slate-600 hover:bg-emerald-100 hover:text-emerald-800 flex items-center gap-2" data-tab="materi">
+                        <i data-lucide="book-open" class="w-4 h-4"></i> Materi
+                    </button>
+                    <button onclick="switchTab('kuis')" class="nav-btn px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 text-slate-600 hover:bg-emerald-100 hover:text-emerald-800 flex items-center gap-2" data-tab="kuis">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i> Kuis
+                    </button>
+                    <button onclick="switchTab('game')" class="nav-btn px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 text-slate-600 hover:bg-emerald-100 hover:text-emerald-800 flex items-center gap-2" data-tab="game">
+                        <i data-lucide="gamepad-2" class="w-4 h-4"></i> Game
+                    </button>
+                    <button onclick="switchTab('tentang')" class="nav-btn px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 text-slate-600 hover:bg-emerald-100 hover:text-emerald-800 flex items-center gap-2" data-tab="tentang">
+                        <i data-lucide="user" class="w-4 h-4"></i> Tentang
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex md:hidden">
+                    <button id="mobile-menu-btn" class="p-2.5 rounded-xl text-emerald-800 bg-emerald-100 hover:bg-emerald-200 focus:outline-none shadow-sm">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-1 bg-white border-b-4 border-emerald-300 shadow-xl">
+            <button onclick="switchTab('home'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl text-base font-bold text-emerald-800 bg-emerald-100 flex items-center gap-3" data-tab="home">
+                <i data-lucide="home" class="w-5 h-5"></i> Home
+            </button>
+            <button onclick="switchTab('tujuan'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl text-base font-bold text-slate-700 hover:bg-emerald-100 hover:text-emerald-800 flex items-center gap-3" data-tab="tujuan">
+                <i data-lucide="target" class="w-5 h-5"></i> Tujuan Pembelajaran
+            </button>
+            <button onclick="switchTab('materi'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl text-base font-bold text-slate-700 hover:bg-emerald-100 hover:text-emerald-800 flex items-center gap-3" data-tab="materi">
+                <i data-lucide="book-open" class="w-5 h-5"></i> Materi
+            </button>
+            <button onclick="switchTab('kuis'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl text-base font-bold text-slate-700 hover:bg-emerald-100 hover:text-emerald-800 flex items-center gap-3" data-tab="kuis">
+                <i data-lucide="help-circle" class="w-5 h-5"></i> Kuis Interaktif
+            </button>
+            <button onclick="switchTab('game'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl text-base font-bold text-slate-700 hover:bg-emerald-100 hover:text-emerald-800 flex items-center gap-3" data-tab="game">
+                <i data-lucide="gamepad-2" class="w-5 h-5"></i> Drag and Drop
+            </button>
+            <button onclick="switchTab('tentang'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl text-base font-bold text-slate-700 hover:bg-emerald-100 hover:text-emerald-800 flex items-center gap-3" data-tab="tentang">
+                <i data-lucide="user" class="w-5 h-5"></i> Tentang Pengembang
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER (SPA VIEWS) -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- 1. HOME TAB -->
+        <section id="home" class="tab-content active">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-6">
+                <div class="space-y-6">
+                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-sunshine text-amber-900 shadow-md">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-amber-700"></i> Media Pembelajaran Interaktif SMP Kelas 7
+                    </span>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-800 tracking-tight leading-tight">
+                        Petualangan Seru Menanam dengan <span class="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent underline decoration-sunshine decoration-4">Hidroponik!</span>
+                    </h1>
+                    <p class="text-lg sm:text-xl text-slate-600 leading-relaxed font-medium">
+                        Halo teman-teman! Mari belajar cara menanam sayuran segar seperti selada, pakcoy, dan kangkung tanpa menggunakan tanah. Sangat seru, bersih, dan warna-warni!
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button onclick="switchTab('materi')" class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-emerald-300 transition-all flex items-center gap-3 text-lg transform hover:-translate-y-1">
+                            <i data-lucide="rocket" class="w-6 h-6"></i> Mulai Belajar
+                        </button>
+                        <button onclick="switchTab('game')" class="px-8 py-4 bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 text-white font-bold rounded-2xl shadow-lg hover:shadow-sky-300 transition-all flex items-center gap-3 text-lg transform hover:-translate-y-1">
+                            <i data-lucide="gamepad-2" class="w-6 h-6"></i> Mainkan Game
+                        </button>
+                    </div>
+
+                    <!-- Quick Highlights -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t-2 border-emerald-200">
+                        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-4 rounded-2xl shadow-md text-center transform hover:scale-105 transition-transform">
+                            <span class="block text-2xl font-extrabold">Fase D</span>
+                            <span class="text-xs font-semibold text-emerald-100">Kelas 7 SMP</span>
+                        </div>
+                        <div class="bg-gradient-to-br from-sky-400 to-blue-500 text-white p-4 rounded-2xl shadow-md text-center transform hover:scale-105 transition-transform">
+                            <span class="block text-2xl font-extrabold">6 Menu</span>
+                            <span class="text-xs font-semibold text-sky-100">Super Interaktif</span>
+                        </div>
+                        <div class="bg-gradient-to-br from-amber-400 to-orange-500 text-white p-4 rounded-2xl shadow-md text-center transform hover:scale-105 transition-transform">
+                            <span class="block text-2xl font-extrabold">100%</span>
+                            <span class="text-xs font-semibold text-amber-100">Seru & Mudah</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Visual Illustration Card with Vibrant Cartoon Vibe -->
+                <div class="relative flex justify-center">
+                    <div class="absolute -inset-4 bg-gradient-to-tr from-emerald-400 via-sky-400 to-amber-300 rounded-3xl blur-2xl opacity-40 animate-pulse"></div>
+                    <div class="relative bg-gradient-to-b from-white to-emerald-50 p-8 rounded-3xl shadow-2xl border-4 border-emerald-300 w-full max-w-md space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-4 h-4 bg-red-400 rounded-full inline-block shadow"></span>
+                                <span class="w-4 h-4 bg-amber-400 rounded-full inline-block shadow"></span>
+                                <span class="w-4 h-4 bg-emerald-400 rounded-full inline-block shadow"></span>
+                            </div>
+                            <span class="text-xs font-bold text-emerald-800 bg-emerald-200 px-3 py-1 rounded-full">🌱 Kebun Modern</span>
+                        </div>
+                        
+                        <!-- Visual representation of hydroponic plants -->
+                        <div class="bg-gradient-to-tr from-sky-100 via-emerald-100 to-amber-100 p-6 rounded-2xl border-2 border-emerald-200 text-center space-y-4 animate-float">
+                            <div class="inline-flex p-5 bg-gradient-to-tr from-emerald-500 to-teal-400 text-white rounded-3xl shadow-lg">
+                                <i data-lucide="sprout" class="w-16 h-16"></i>
+                            </div>
+                            <h3 class="font-extrabold text-2xl text-emerald-900">Hidroponik Pipa PVC</h3>
+                            <p class="text-sm font-medium text-slate-700">Dilengkapi Nutrisi AB Mix & Bak Air Jernih untuk Selada & Pakcoy Subur!</p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-3.5 bg-emerald-100/80 rounded-2xl border border-emerald-200">
+                                <div class="p-1 bg-emerald-500 text-white rounded-lg"><i data-lucide="check" class="w-4 h-4"></i></div>
+                                <span class="text-sm font-bold text-emerald-900">Tanpa tanah, akar menyerap air nutrisi langsung</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3.5 bg-sky-100/80 rounded-2xl border border-sky-200">
+                                <div class="p-1 bg-sky-500 text-white rounded-lg"><i data-lucide="check" class="w-4 h-4"></i></div>
+                                <span class="text-sm font-bold text-sky-900">Hasil panen lebih bersih dan bebas pestisida</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. TUJUAN PEMBELAJARAN TAB -->
+        <section id="tujuan" class="tab-content">
+            <div class="max-w-4xl mx-auto space-y-8 py-4">
+                <div class="text-center space-y-3">
+                    <span class="px-4 py-1.5 rounded-full text-sm font-bold bg-emerald-200 text-emerald-900 shadow">Capaian Pembelajaran Fase D</span>
+                    <h2 class="text-3xl font-extrabold text-slate-800">Tujuan Pembelajaran</h2>
+                    <p class="text-slate-600 font-medium">Melalui media pembelajaran berwarna ini, kamu akan mencapai kompetensi berikut:</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gradient-to-br from-white to-emerald-50 p-6 rounded-3xl shadow-md border-2 border-emerald-200 flex gap-4 items-start hover:shadow-lg transition-all transform hover:-translate-y-1">
+                        <div class="p-4 bg-gradient-to-tr from-emerald-500 to-teal-400 text-white rounded-2xl flex-shrink-0 shadow-md">
+                            <i data-lucide="book-open-check" class="w-6 h-6"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-bold text-lg text-emerald-900">1. Memahami Konsep Hidroponik</h3>
+                            <p class="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">Menjelaskan pengertian dasar budi daya tanaman tanpa tanah serta keunggulannya dibanding pertanian biasa.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-white to-sky-50 p-6 rounded-3xl shadow-md border-2 border-sky-200 flex gap-4 items-start hover:shadow-lg transition-all transform hover:-translate-y-1">
+                        <div class="p-4 bg-gradient-to-tr from-sky-400 to-blue-500 text-white rounded-2xl flex-shrink-0 shadow-md">
+                            <i data-lucide="wrench" class="w-6 h-6"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-bold text-lg text-sky-900">2. Mengenal Alat & Bahan</h3>
+                            <p class="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">Mengidentifikasi rockwool, netpot, pipa instalasi, bak air, dan larutan nutrisi AB Mix dengan tepat.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-white to-amber-50 p-6 rounded-3xl shadow-md border-2 border-amber-200 flex gap-4 items-start hover:shadow-lg transition-all transform hover:-translate-y-1">
+                        <div class="p-4 bg-gradient-to-tr from-amber-400 to-orange-500 text-white rounded-2xl flex-shrink-0 shadow-md">
+                            <i data-lucide="layers" class="w-6 h-6"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-bold text-lg text-amber-900">3. Mengetahui Sistem Hidroponik</h3>
+                            <p class="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">Membedakan jenis sistem budi daya populer seperti NFT, DFT, dan Sistem Sumbu (Wick System).</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-white to-purple-50 p-6 rounded-3xl shadow-md border-2 border-purple-200 flex gap-4 items-start hover:shadow-lg transition-all transform hover:-translate-y-1">
+                        <div class="p-4 bg-gradient-to-tr from-purple-500 to-pink-500 text-white rounded-2xl flex-shrink-0 shadow-md">
+                            <i data-lucide="sprout" class="w-6 h-6"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-bold text-lg text-purple-900">4. Praktik Budidaya Mandiri</h3>
+                            <p class="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">Mampu melakukan langkah penyemaian biji sayuran, perawatan bibit, pindah tanam, hingga pemanenan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 text-white p-8 rounded-3xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6 border-4 border-emerald-300">
+                    <div class="space-y-2 text-center sm:text-left">
+                        <h3 class="text-2xl font-extrabold">Siap Mendalami Materinya?</h3>
+                        <p class="text-emerald-100 text-sm sm:text-base font-medium">Yuk, pelajari materi lengkap di menu Materi Pembelajaran.</p>
+                    </div>
+                    <button onclick="switchTab('materi')" class="px-6 py-3.5 bg-sunshine hover:bg-amber-400 text-slate-900 font-extrabold rounded-2xl shadow-lg transition-all flex items-center gap-2 flex-shrink-0 transform hover:scale-105">
+                        Buka Materi <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. MATERI PEMBELAJARAN TAB -->
+        <section id="materi" class="tab-content">
+            <div class="max-w-5xl mx-auto space-y-10 py-4">
+                <div class="text-center space-y-3">
+                    <span class="px-4 py-1.5 rounded-full text-sm font-bold bg-sky-200 text-sky-900 shadow">Modul Belajar Seru Kelas 7</span>
+                    <h2 class="text-3xl font-extrabold text-slate-800">Materi Budi Daya Hidroponik</h2>
+                    <p class="text-slate-600 font-medium">Pilih topik di bawah untuk membaca materi pelajaran dengan penjelasan penuh warna.</p>
+                </div>
+
+                <!-- Sub-nav for Material Topics -->
+                <div class="bg-white rounded-3xl shadow-xl border-4 border-emerald-200 p-6 sm:p-8 space-y-6">
+                    
+                    <div class="flex flex-wrap gap-2 pb-6 border-b-2 border-slate-100">
+                        <button onclick="switchMateriTab('pengertian')" class="materi-tab-btn px-4 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-500 to-teal-600 text-white transition-all shadow-md" data-materi="pengertian">1. Pengertian</button>
+                        <button onclick="switchMateriTab('kelebihan')" class="materi-tab-btn px-4 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-emerald-100 hover:text-emerald-900 transition-all" data-materi="kelebihan">2. Kelebihan</button>
+                        <button onclick="switchMateriTab('alat')" class="materi-tab-btn px-4 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-emerald-100 hover:text-emerald-900 transition-all" data-materi="alat">3. Alat & Komponen</button>
+                        <button onclick="switchMateriTab('sistem')" class="materi-tab-btn px-4 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-emerald-100 hover:text-emerald-900 transition-all" data-materi="sistem">4. Jenis Sistem</button>
+                        <button onclick="switchMateriTab('langkah')" class="materi-tab-btn px-4 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-emerald-100 hover:text-emerald-900 transition-all" data-materi="langkah">5. Langkah Praktik</button>
+                    </div>
+
+                    <!-- Materi Pane 1: Pengertian -->
+                    <div id="materi-pengertian" class="materi-pane space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 bg-emerald-500 text-white rounded-2xl shadow-md"><i data-lucide="book-open" class="w-6 h-6"></i></div>
+                            <h3 class="text-2xl font-extrabold text-emerald-900">Apa itu Hidroponik?</h3>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed font-medium">
+                            Kata <strong>Hidroponik</strong> berasal dari bahasa Yunani, yaitu <em>hydro</em> yang artinya air dan <em>ponos</em> yang artinya daya atau kerja. Jadi, hidroponik adalah metode budi daya menanam tanaman dengan memanfaatkan air sebagai media utamanya <strong>tanpa menggunakan tanah</strong> sama sekali.
+                        </p>
+                        <p class="text-slate-600 leading-relaxed font-medium">
+                            Di dalam sistem ini, akar tanaman disangga oleh media inert (seperti rockwool atau sekam) dan disuplai langsung menggunakan air bernutrisi tinggi yang mengandung unsur hara esensial yang dibutuhkan tanaman.
+                        </p>
+                        <div class="bg-gradient-to-r from-emerald-100 to-teal-100 p-5 rounded-2xl border-2 border-emerald-300 flex items-start gap-4 shadow-sm">
+                            <i data-lucide="lightbulb" class="w-6 h-6 text-amber-600 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-emerald-900">Tanaman yang Cocok</h4>
+                                <p class="text-sm text-emerald-800 font-medium mt-1">Sayuran daun seperti <strong>selada, pakcoy, kangkung, dan bayam</strong> adalah jenis tanaman yang paling ideal dan cepat dipanen menggunakan metode ini.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Materi Pane 2: Kelebihan -->
+                    <div id="materi-kelebihan" class="materi-pane space-y-4 hidden">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 bg-sky-500 text-white rounded-2xl shadow-md"><i data-lucide="sparkles" class="w-6 h-6"></i></div>
+                            <h3 class="text-2xl font-extrabold text-sky-900">Kelebihan Budi Daya Hidroponik</h3>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed font-medium">Mengapa teknik hidroponik sangat populer di era modern saat ini? Berikut keunggulannya:</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                            <div class="p-5 bg-gradient-to-br from-white to-emerald-50 rounded-2xl border-2 border-emerald-200 shadow-sm space-y-2">
+                                <span class="font-bold text-emerald-700 flex items-center gap-2 text-lg"><i data-lucide="droplet" class="w-5 h-5 text-sky-500"></i> Hemat Air</span>
+                                <p class="text-sm text-slate-600 font-medium">Penggunaan air sangat efisien karena air bersirkulasi di dalam wadah dan tidak terbuang sia-sia ke dalam tanah.</p>
+                            </div>
+                            <div class="p-5 bg-gradient-to-br from-white to-sky-50 rounded-2xl border-2 border-sky-200 shadow-sm space-y-2">
+                                <span class="font-bold text-sky-700 flex items-center gap-2 text-lg"><i data-lucide="home" class="w-5 h-5 text-emerald-500"></i> Cocok di Lahan Sempit</span>
+                                <p class="text-sm text-slate-600 font-medium">Bisa diterapkan di teras rumah, halaman garasi, balkon apartemen, atau atap rumah (rooftop).</p>
+                            </div>
+                            <div class="p-5 bg-gradient-to-br from-white to-amber-50 rounded-2xl border-2 border-amber-200 shadow-sm space-y-2">
+                                <span class="font-bold text-amber-700 flex items-center gap-2 text-lg"><i data-lucide="shield-check" class="w-5 h-5 text-amber-500"></i> Bersih & Higienis</span>
+                                <p class="text-sm text-slate-600 font-medium">Tanaman terhindar dari penyakit tular tanah dan gulma liar, sehingga sayuran yang dihasilkan lebih bersih.</p>
+                            </div>
+                            <div class="p-5 bg-gradient-to-br from-white to-purple-50 rounded-2xl border-2 border-purple-200 shadow-sm space-y-2">
+                                <span class="font-bold text-purple-700 flex items-center gap-2 text-lg"><i data-lucide="zap" class="w-5 h-5 text-purple-500"></i> Pertumbuhan Cepat</span>
+                                <p class="text-sm text-slate-600 font-medium">Nutrisi diserap langsung oleh akar membuat masa panen menjadi lebih cepat dibanding bercocok tanam biasa.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Materi Pane 3: Alat & Komponen -->
+                    <div id="materi-alat" class="materi-pane space-y-4 hidden">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 bg-amber-500 text-white rounded-2xl shadow-md"><i data-lucide="wrench" class="w-6 h-6"></i></div>
+                            <h3 class="text-2xl font-extrabold text-amber-900">Alat dan Komponen Utama Hidroponik</h3>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed font-medium">Dalam merakit sistem hidroponik, berikut komponen penting yang wajib kamu kenal:</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                            <div class="bg-gradient-to-b from-emerald-50 to-teal-50 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm space-y-3">
+                                <div class="w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center font-bold shadow">1</div>
+                                <h4 class="font-bold text-emerald-900 text-lg">Rockwool / Media</h4>
+                                <p class="text-xs sm:text-sm text-slate-600 font-medium">Media tanam steril berpori yang berfungsi menyangga akar dan menjaga kelembapan bibit.</p>
+                            </div>
+                            <div class="bg-gradient-to-b from-sky-50 to-blue-50 p-5 rounded-2xl border-2 border-sky-200 shadow-sm space-y-3">
+                                <div class="w-10 h-10 bg-sky-500 text-white rounded-xl flex items-center justify-center font-bold shadow">2</div>
+                                <h4 class="font-bold text-sky-900 text-lg">Nutrisi AB Mix</h4>
+                                <p class="text-xs sm:text-sm text-slate-600 font-medium">Larutan pupuk khusus yang kaya akan unsur hara makro dan mikro untuk makanan tanaman.</p>
+                            </div>
+                            <div class="bg-gradient-to-b from-amber-50 to-orange-50 p-5 rounded-2xl border-2 border-amber-200 shadow-sm space-y-3">
+                                <div class="w-10 h-10 bg-amber-500 text-white rounded-xl flex items-center justify-center font-bold shadow">3</div>
+                                <h4 class="font-bold text-amber-900 text-lg">Pipa & Bak Air</h4>
+                                <p class="text-xs sm:text-sm text-slate-600 font-medium">Instalasi pipa PVC berlubang serta bak penampung air tempat larutan nutrisi dialirkan.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Materi Pane 4: Jenis Sistem -->
+                    <div id="materi-sistem" class="materi-pane space-y-4 hidden">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 bg-purple-500 text-white rounded-2xl shadow-md"><i data-lucide="layers" class="w-6 h-6"></i></div>
+                            <h3 class="text-2xl font-extrabold text-purple-900">Jenis Sistem Hidroponik Populer</h3>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed font-medium">Berikut beberapa teknik aliran air nutrisi yang umum digunakan:</p>
+                        
+                        <div class="space-y-4 pt-2">
+                            <div class="p-5 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border-2 border-emerald-200 shadow-sm flex gap-4 items-start">
+                                <span class="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-xl text-sm flex-shrink-0 shadow">NFT</span>
+                                <div>
+                                    <h4 class="font-bold text-emerald-900 text-lg">Nutrient Film Technique</h4>
+                                    <p class="text-sm text-slate-600 font-medium mt-1">Air bernutrisi dialirkan secara tipis (membentuk film) dan terus-menerus melalui pipa menggunakan pompa kecil, sehingga akar mendapat nutrisi dan oksigen melimpah.</p>
+                                </div>
+                            </div>
+                            <div class="p-5 bg-gradient-to-r from-sky-50 to-blue-50 rounded-2xl border-2 border-sky-200 shadow-sm flex gap-4 items-start">
+                                <span class="bg-sky-500 text-white font-bold px-3 py-1.5 rounded-xl text-sm flex-shrink-0 shadow">DFT</span>
+                                <div>
+                                    <h4 class="font-bold text-sky-900 text-lg">Deep Flow Technique</h4>
+                                    <p class="text-sm text-slate-600 font-medium mt-1">Air nutrisi digenangkan setinggi beberapa sentimeter di dalam pipa, sehingga jika listrik padam tanaman tetap aman karena ada cadangan air.</p>
+                                </div>
+                            </div>
+                            <div class="p-5 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-200 shadow-sm flex gap-4 items-start">
+                                <span class="bg-amber-500 text-white font-bold px-3 py-1.5 rounded-xl text-sm flex-shrink-0 shadow">Wick</span>
+                                <div>
+                                    <h4 class="font-bold text-amber-900 text-lg">Wick System (Sistem Sumbu)</h4>
+                                    <p class="text-sm text-slate-600 font-medium mt-1">Sistem pasif tanpa listrik yang memanfaatkan sumbu kain flanel untuk menyerap air nutrisi dari wadah bawah ke akar tanaman. Sangat mudah dicoba pemula!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Materi Pane 5: Langkah Praktik -->
+                    <div id="materi-langkah" class="materi-pane space-y-4 hidden">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 bg-emerald-600 text-white rounded-2xl shadow-md"><i data-lucide="check-circle-2" class="w-6 h-6"></i></div>
+                            <h3 class="text-2xl font-extrabold text-emerald-900">Langkah-Langkah Praktik Sederhana</h3>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed font-medium">Ikuti tahapan berikut untuk mulai membudidayakan sayuran di sekolah atau rumah:</p>
+                        
+                        <div class="space-y-3 pt-2">
+                            <div class="flex items-center gap-4 p-4 bg-emerald-100/70 rounded-2xl border border-emerald-200">
+                                <span class="w-8 h-8 bg-emerald-600 text-white font-bold rounded-full flex items-center justify-center flex-shrink-0 shadow">1</span>
+                                <span class="font-medium text-slate-700"><strong>Penyemaian Bibit:</strong> Potong rockwool, basahi dengan air, lalu masukkan biji sayuran (selada/pakcoy) ke lubangnya.</span>
+                            </div>
+                            <div class="flex items-center gap-4 p-4 bg-teal-100/70 rounded-2xl border border-teal-200">
+                                <span class="w-8 h-8 bg-teal-600 text-white font-bold rounded-full flex items-center justify-center flex-shrink-0 shadow">2</span>
+                                <span class="font-medium text-slate-700"><strong>Perawatan Bibit:</strong> Letakkan di tempat terkena sinar matahari pagi sampai tumbuh 2-3 helai daun sejati (umur ± 10-14 hari).</span>
+                            </div>
+                            <div class="flex items-center gap-4 p-4 bg-sky-100/70 rounded-2xl border border-sky-200">
+                                <span class="w-8 h-8 bg-sky-600 text-white font-bold rounded-full flex items-center justify-center flex-shrink-0 shadow">3</span>
+                                <span class="font-medium text-slate-700"><strong>Pindah Tanam (Transplanting):</strong> Masukkan rockwool berisi bibit ke dalam netpot dan pasang ke instalasi hidroponik.</span>
+                            </div>
+                            <div class="flex items-center gap-4 p-4 bg-amber-100/70 rounded-2xl border border-amber-200">
+                                <span class="w-8 h-8 bg-amber-600 text-white font-bold rounded-full flex items-center justify-center flex-shrink-0 shadow">4</span>
+                                <span class="font-medium text-slate-700"><strong>Pemberian Nutrisi & Panen:</strong> Berikan larutan AB Mix secara teratur, jaga kebersihan air, dan nikmati hasil panen di usia 30-45 hari!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. KUIS INTERAKTIF TAB -->
+        <section id="kuis" class="tab-content">
+            <div class="max-w-3xl mx-auto space-y-8 py-4">
+                <div class="text-center space-y-3">
+                    <span class="px-4 py-1.5 rounded-full text-sm font-bold bg-amber-200 text-amber-900 shadow">Uji Pemahaman Materi</span>
+                    <h2 class="text-3xl font-extrabold text-slate-800">Kuis Interaktif Hidroponik</h2>
+                    <p class="text-slate-600 font-medium">Jawab 5 pertanyaan pilihan ganda berikut untuk menguji seberapa paham kamu!</p>
+                </div>
+
+                <!-- Quiz Container -->
+                <div id="quiz-card" class="bg-white rounded-3xl shadow-xl border-4 border-amber-200 p-6 sm:p-8 space-y-6">
+                    <div class="flex justify-between items-center pb-4 border-b-2 border-slate-100">
+                        <span id="quiz-progress" class="text-sm font-bold text-emerald-800 bg-emerald-100 px-3.5 py-1.5 rounded-full">Soal 1 dari 5</span>
+                        <span id="quiz-score" class="text-sm font-bold text-sky-800 bg-sky-100 px-3.5 py-1.5 rounded-full">Skor: 0</span>
+                    </div>
+
+                    <div id="quiz-question-container" class="space-y-4">
+                        <h3 id="quiz-question" class="text-xl font-extrabold text-slate-800">Memuat Pertanyaan...</h3>
+                        <div id="quiz-options" class="space-y-3">
+                            <!-- Options injected dynamically by JS -->
+                        </div>
+                    </div>
+
+                    <div id="quiz-feedback" class="hidden p-4 rounded-2xl font-bold text-center"></div>
+
+                    <div class="flex justify-end pt-4">
+                        <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden px-6 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-2xl shadow-lg transition-all flex items-center gap-2">
+                            Soal Selanjutnya <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Result Card (Hidden Initially) -->
+                <div id="quiz-result-card" class="hidden bg-white rounded-3xl shadow-xl border-4 border-emerald-300 p-8 text-center space-y-6">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-amber-400 to-orange-500 text-white rounded-full flex items-center justify-center mx-auto shadow-lg animate-bounce">
+                        <i data-lucide="award" class="w-12 h-12"></i>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-3xl font-extrabold text-slate-800">Kuis Selesai! 🎉</h3>
+                        <p id="quiz-result-text" class="text-lg text-slate-600 font-medium">Kamu mendapatkan skor akhir yang luar biasa!</p>
+                    </div>
+                    <button onclick="restartQuiz()" class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-2xl shadow-lg transition-all flex items-center gap-2 mx-auto">
+                        <i data-lucide="rotate-ccw" class="w-5 h-5"></i> Ulangi Kuis
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. DRAG AND DROP / MATCHING GAME TAB -->
+        <section id="game" class="tab-content">
+            <div class="max-w-4xl mx-auto space-y-8 py-4">
+                <div class="text-center space-y-3">
+                    <span class="px-4 py-1.5 rounded-full text-sm font-bold bg-sky-200 text-sky-900 shadow">Mini Game Edukatif Warna-Warni</span>
+                    <h2 class="text-3xl font-extrabold text-slate-800">Pencocokan Alat & Komponen Hidroponik</h2>
+                    <p class="text-slate-600 font-medium">Klik salah satu komponen di sebelah kiri, lalu klik kotak fungsi yang sesuai di sebelah kanan!</p>
+                </div>
+
+                <!-- Game Dashboard -->
+                <div class="bg-white rounded-3xl shadow-xl border-4 border-sky-200 p-6 sm:p-8 space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-gradient-to-r from-emerald-100 via-sky-100 to-amber-100 p-4 rounded-2xl border-2 border-emerald-200 shadow-sm">
+                        <div class="flex items-center gap-2 font-extrabold text-emerald-900 text-lg">
+                            <i data-lucide="gamepad-2" class="w-6 h-6 text-emerald-600"></i> Skor Game: <span id="game-score">0</span> / 4
+                        </div>
+                        <button onclick="resetGame()" class="px-5 py-2.5 bg-white hover:bg-emerald-50 text-emerald-800 text-sm font-bold rounded-xl shadow-md border border-emerald-300 transition-all flex items-center gap-2">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset Game
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                        <!-- Items to Match -->
+                        <div class="space-y-3">
+                            <h3 class="font-extrabold text-slate-800 text-lg flex items-center gap-2">
+                                <i data-lucide="box" class="w-5 h-5 text-emerald-600"></i> 1. Pilih Komponen:
+                            </h3>
+                            <div id="game-items" class="space-y-3">
+                                <!-- Generated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Target Zones -->
+                        <div class="space-y-3">
+                            <h3 class="font-extrabold text-slate-800 text-lg flex items-center gap-2">
+                                <i data-lucide="target" class="w-5 h-5 text-sky-600"></i> 2. Pilih Fungsi yang Cocok:
+                            </h3>
+                            <div id="game-targets" class="space-y-3">
+                                <!-- Generated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="game-message" class="hidden p-5 rounded-2xl font-bold text-center bg-gradient-to-r from-emerald-200 to-teal-200 text-emerald-900 border-2 border-emerald-400 shadow-md space-y-2">
+                        <div class="flex items-center justify-center gap-2 text-xl font-extrabold">
+                            <span>🎉</span> Luar Biasa! Kamu Berhasil Menyelesaikan Game Ini! <span>🌟</span>
+                        </div>
+                        <p class="text-sm font-semibold text-emerald-800">Semua komponen hidroponik berhasil dicocokkan dengan sempurna!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. TENTANG PENGEMBANG TAB -->
+        <section id="tentang" class="tab-content">
+            <div class="max-w-3xl mx-auto space-y-8 py-4">
+                <div class="text-center space-y-3">
+                    <span class="px-4 py-1.5 rounded-full text-sm font-bold bg-purple-200 text-purple-900 shadow">Profil Pengajar</span>
+                    <h2 class="text-3xl font-extrabold text-slate-800">Tentang Pengembang</h2>
+                    <p class="text-slate-600 font-medium">Informasi mengenai pembuat media pembelajaran interaktif ini.</p>
+                </div>
+
+                <div class="bg-white rounded-3xl shadow-xl border-4 border-purple-200 p-8 space-y-6 text-center">
+                    <div class="w-28 h-28 bg-gradient-to-tr from-emerald-500 via-sky-400 to-purple-500 rounded-full flex items-center justify-center mx-auto shadow-xl text-white transform hover:rotate-6 transition-transform">
+                        <i data-lucide="user-check" class="w-14 h-14"></i>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h3 class="text-2xl font-extrabold text-slate-800">Siti Malikha, S.Pd.</h3>
+                        <p class="text-emerald-700 font-bold bg-emerald-100 inline-block px-4 py-1 rounded-full text-sm">Guru Mata Pelajaran Prakarya SMP</p>
+                    </div>
+
+                    <p class="text-slate-600 max-w-xl mx-auto leading-relaxed font-medium">
+                        Website media pembelajaran interaktif ini didedikasikan khusus untuk siswa-siswi SMP Kelas 7 (Fase D). Semoga modul digital penuh warna ini membantu proses belajar materi budi daya tanaman menjadi lebih menyenangkan dan mudah dipahami.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t-2 border-slate-100 text-left max-w-lg mx-auto">
+                        <div class="flex items-center gap-3 p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border-2 border-emerald-200 shadow-sm">
+                            <i data-lucide="school" class="w-6 h-6 text-emerald-600 flex-shrink-0"></i>
+                            <div>
+                                <span class="block text-xs font-bold text-slate-500">Mata Pelajaran</span>
+                                <span class="font-extrabold text-slate-800 text-sm">Prakarya (Budi Daya)</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3.5 bg-gradient-to-r from-sky-50 to-blue-50 rounded-2xl border-2 border-sky-200 shadow-sm">
+                            <i data-lucide="mail" class="w-6 h-6 text-sky-600 flex-shrink-0"></i>
+                            <div>
+                                <span class="block text-xs font-bold text-slate-500">Kontak Resmi</span>
+                                <span class="font-extrabold text-slate-800 text-sm">siti.malikha@guru.smp.id</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <div class="p-4 bg-gradient-to-r from-amber-100 to-yellow-100 rounded-2xl border-2 border-amber-300 inline-block text-amber-900 font-bold text-sm shadow-sm">
+                            ✨ "Teruslah belajar, berkarya, dan cintai lingkungan melalui pertanian modern!" ✨
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t-4 border-emerald-300 py-6 mt-12 shadow-inner">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="text-sm font-bold text-slate-700">
+                Media Pembelajaran Interaktif Budi Daya Tanaman Hidroponik &bull; Fase D Prakarya Kelas 7 SMP
+            </p>
+            <p class="text-xs font-medium text-slate-500">
+                Dikembangkan dengan 💚 oleh <span class="font-extrabold text-emerald-700">Siti Malikha</span> &copy; 2026
+            </p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC & INTERACTION -->
+    <script>
+        // Initialize Lucide Icons and Modules on Window Load
+        window.onload = function() {
+            lucide.createIcons();
+            initQuiz();
+            initGame();
+        };
+
+        // Custom Modal Function (replaces alert/confirm)
+        function showModal(title, message, isSuccess = true) {
+            const modal = document.getElementById('custom-modal');
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            
+            const iconDiv = document.getElementById('modal-icon');
+            if(isSuccess) {
+                iconDiv.className = "w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner";
+            } else {
+                iconDiv.className = "w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner";
+            }
+            
+            modal.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        function toggleMobileMenu() {
+            mobileMenu.classList.add('hidden');
+        }
+
+        // SPA Tab Navigation Logic
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+
+            // Update Desktop Nav styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if(btn.getAttribute('data-tab') === tabId) {
+                    btn.className = "nav-btn px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 text-emerald-800 bg-emerald-100 flex items-center gap-2 shadow-sm";
+                } else {
+                    btn.className = "nav-btn px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 text-slate-600 hover:bg-emerald-100 hover:text-emerald-800 flex items-center gap-2";
+                }
+            });
+
+            // Scroll to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Materi Sub-Tabs Navigation
+        function switchMateriTab(materiId) {
+            document.querySelectorAll('.materi-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            document.getElementById('materi-' + materiId).classList.remove('hidden');
+
+            document.querySelectorAll('.materi-tab-btn').forEach(btn => {
+                if(btn.getAttribute('data-materi') === materiId) {
+                    btn.className = "materi-tab-btn px-4 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-500 to-teal-600 text-white transition-all shadow-md";
+                } else {
+                    btn.className = "materi-tab-btn px-4 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-emerald-100 hover:text-emerald-900 transition-all";
+                }
+            });
+        }
+
+        // Quiz Data & Logic
+        const quizData = [
+            {
+                question: "Apa arti kata 'Hydro' dalam istilah Hidroponik?",
+                options: ["Tanah", "Air", "Pupuk", "Udara"],
+                answer: 1
+            },
+            {
+                question: "Larutan pupuk khusus yang kaya unsur hara untuk hidroponik dinamakan...",
+                options: ["Kompos Organik", "Urea Cair", "Nutrisi AB Mix", "Pestisida Nabati"],
+                answer: 2
+            },
+            {
+                question: "Media tanam steril yang terbuat dari batuan basal leleh untuk menyangga tanaman disebut...",
+                options: ["Rockwool", "Arang Sekam", "Spons Mandi", "Pasir Kuarsa"],
+                answer: 0
+            },
+            {
+                question: "Sistem hidroponik pasif tanpa menggunakan mesin pompa listrik dinamakan...",
+                options: ["NFT System", "DFT System", "Wick System", "Aeroponik"],
+                answer: 2
+            },
+            {
+                question: "Sayuran daun apa yang paling sering dan mudah dibudidayakan secara hidroponik?",
+                options: ["Pohon Pisang", "Selada & Pakcoy", "Tanaman Padi", "Pohon Mangga"],
+                answer: 1
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let selectedOption = null;
+
+        function initQuiz() {
+            currentQuizIndex = 0;
+            quizScore = 0;
+            document.getElementById('quiz-card').classList.remove('hidden');
+            document.getElementById('quiz-result-card').classList.add('hidden');
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            selectedOption = null;
+            const q = quizData[currentQuizIndex];
+            document.getElementById('quiz-progress').innerText = `Soal ${currentQuizIndex + 1} dari ${quizData.length}`;
+            document.getElementById('quiz-score').innerText = `Skor: ${quizScore}`;
+            document.getElementById('quiz-question').innerText = q.question;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl border-2 border-emerald-200 bg-gradient-to-r from-emerald-50/50 to-teal-50/50 hover:bg-emerald-100 hover:border-emerald-400 font-bold text-slate-700 transition-all flex items-center justify-between shadow-sm";
+                btn.innerHTML = `<span>${opt}</span> <span class="w-7 h-7 rounded-full bg-emerald-200 text-emerald-800 flex items-center justify-center text-xs font-extrabold">${String.fromCharCode(65 + idx)}</span>`;
+                btn.onclick = () => selectQuizOption(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('quiz-next-btn').classList.add('hidden');
+        }
+
+        function selectQuizOption(selectedIndex, btnElement) {
+            if (selectedOption !== null) return;
+            selectedOption = selectedIndex;
+
+            const q = quizData[currentQuizIndex];
+            const feedbackEl = document.getElementById('quiz-feedback');
+            feedbackEl.classList.remove('hidden');
+
+            const allButtons = document.getElementById('quiz-options').children;
+
+            if (selectedIndex === q.answer) {
+                quizScore += 20;
+                btnElement.className = "w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-100 font-bold text-emerald-900 flex items-center justify-between shadow-md";
+                feedbackEl.className = "p-4 rounded-2xl font-bold text-center bg-emerald-200 text-emerald-900 border-2 border-emerald-400 shadow-sm";
+                feedbackEl.innerText = "Benar sekali! Hebat! 🎉";
+            } else {
+                btnElement.className = "w-full text-left p-4 rounded-2xl border-2 border-red-400 bg-red-100 font-bold text-red-900 flex items-center justify-between shadow-md";
+                allButtons[q.answer].className = "w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-100 font-bold text-emerald-900 flex items-center justify-between shadow-md";
+                feedbackEl.className = "p-4 rounded-2xl font-bold text-center bg-red-100 text-red-900 border-2 border-red-300 shadow-sm";
+                feedbackEl.innerText = `Kurang tepat. Jawaban yang benar adalah: ${q.options[q.answer]}`;
+            }
+
+            document.getElementById('quiz-score').innerText = `Skor: ${quizScore}`;
+            document.getElementById('quiz-next-btn').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            if (currentQuizIndex < quizData.length) {
+                loadQuizQuestion();
+            } else {
+                document.getElementById('quiz-card').classList.add('hidden');
+                document.getElementById('quiz-result-card').classList.remove('hidden');
+                document.getElementById('quiz-result-text').innerText = `Kamu berhasil menyelesaikan kuis dengan total skor ${quizScore} dari 100!`;
+            }
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        // Mini Game Data & Click-to-Match Logic (Touch/Click Friendly)
+        const gameData = [
+            { id: 1, item: "Rockwool", target: "Media penyangga bibit tanaman" },
+            { id: 2, item: "Nutrisi AB Mix", target: "Larutan pupuk air penyuplai hara" },
+            { id: 3, item: "Netpot", target: "Wadah kecil berlubang tempat tanaman" },
+            { id: 4, item: "Pompa Air", target: "Alat pengalir sirkulasi air nutrisi" }
+        ];
+
+        let selectedGameItem = null;
+        let gameScore = 0;
+        let matchedItems = [];
+
+        function initGame() {
+            gameScore = 0;
+            matchedItems = [];
+            selectedGameItem = null;
+            document.getElementById('game-score').innerText = gameScore;
+            document.getElementById('game-message').classList.add('hidden');
+            renderGameElements();
+        }
+
+        function renderGameElements() {
+            const itemsContainer = document.getElementById('game-items');
+            const targetsContainer = document.getElementById('game-targets');
+            itemsContainer.innerHTML = '';
+            targetsContainer.innerHTML = '';
+
+            const shuffledItems = [...gameData].sort(() => Math.random() - 0.5);
+            const shuffledTargets = [...gameData].sort(() => Math.random() - 0.5);
+
+            shuffledItems.forEach(d => {
+                if (matchedItems.includes(d.id)) return;
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl border-2 border-emerald-300 bg-gradient-to-r from-emerald-100 to-teal-100 hover:from-emerald-200 hover:to-teal-200 font-bold text-emerald-900 transition-all flex items-center justify-between shadow-sm";
+                btn.innerHTML = `<span>${d.item}</span> <i data-lucide="grip-vertical" class="w-4 h-4 text-emerald-600"></i>`;
+                btn.onclick = () => selectGameItem(d.id, btn);
+                itemsContainer.appendChild(btn);
+            });
+
+            shuffledTargets.forEach(d => {
+                if (matchedItems.includes(d.id)) return;
+                const div = document.createElement('div');
+                div.className = "w-full p-4 rounded-2xl border-2 border-sky-300 bg-gradient-to-r from-sky-100 to-blue-100 hover:from-sky-200 hover:to-blue-200 font-bold text-slate-700 transition-all flex items-center justify-between cursor-pointer shadow-sm";
+                div.innerHTML = `<span>${d.target}</span> <span class="w-7 h-7 rounded-full bg-sky-300 text-sky-900 text-xs font-extrabold flex items-center justify-center">?</span>`;
+                div.onclick = () => matchGameTarget(d.id);
+                targetsContainer.appendChild(div);
+            });
+
+            lucide.createIcons();
+        }
+
+        function selectGameItem(id, btnElement) {
+            document.querySelectorAll('#game-items button').forEach(b => b.classList.remove('ring-4', 'ring-emerald-500', 'bg-emerald-200'));
+            btnElement.classList.add('ring-4', 'ring-emerald-500', 'bg-emerald-200');
+            selectedGameItem = id;
+        }
+
+        function matchGameTarget(targetId) {
+            if (selectedGameItem === null) {
+                showModal("Perhatian", "Pilih salah satu komponen di sebelah kiri terlebih dahulu sebelum mencocokkan!", false);
+                return;
+            }
+
+            if (selectedGameItem === targetId) {
+                gameScore++;
+                matchedItems.push(targetId);
+                selectedGameItem = null;
+                document.getElementById('game-score').innerText = gameScore;
+
+                if (gameScore === gameData.length) {
+                    document.getElementById('game-message').classList.remove('hidden');
+                }
+                renderGameElements();
+            } else {
+                showModal("Belum Tepat", "Pasangan komponen belum sesuai. Coba perhatikan lagi fungsinya ya!", false);
+                selectedGameItem = null;
+                renderGameElements();
+            }
+        }
+
+        function resetGame() {
+            initGame();
+        }
+    </script>
+</body>
+</html>
